@@ -1,4 +1,6 @@
+using BusinessLayer.Interfaces;
 using DataAccessLayer;
+using DataAccessLayer.UnitOfWork;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -30,6 +32,8 @@ namespace MyCVCore
             {
                 options.UseSqlServer(configuration.GetConnectionString("MycvConnection"));
             });
+
+            services.AddScoped(typeof(IUnitOfWork<>),typeof(UnitOfWork<>));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

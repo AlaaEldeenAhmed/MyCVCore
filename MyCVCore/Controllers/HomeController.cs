@@ -1,6 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using BusinessLayer.Entities;
+using BusinessLayer.Interfaces;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using MyCVCore.Models;
+using MyCVCore.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -11,16 +14,23 @@ namespace MyCVCore.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
+        private readonly IUnitOfWork<Owner> _owner;
+        private readonly IUnitOfWork<Projects> _projects;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(IUnitOfWork<Owner> Owner, IUnitOfWork<Projects> Projects)
         {
-            _logger = logger;
+            _owner = Owner;
+            _projects = Projects;
         }
 
         public IActionResult Index()
         {
-            return View();
+            var homeviewmodel = new HomeViewModel
+            {
+                Owner = _owner.Entity.GetAll().First(),
+                Projects = _projects.Entity.GetAll().ToList()
+            };
+            return View(homeviewmodel);
         }
 
         public IActionResult About()
